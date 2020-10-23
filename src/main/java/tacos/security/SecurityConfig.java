@@ -18,6 +18,20 @@ import javax.sql.DataSource;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests()
+                .antMatchers("/design","/orders")
+                .access("hasRole('ROLE_USER')")
+                .antMatchers("/","/**").access("permitAll")
+                .and()
+                .formLogin()
+                .loginPage("/login")
+                .and()
+                .logout()
+                .logoutSuccessUrl("/")
+                .and().csrf();
+    }
     @Autowired
     private UserDetailsService userDetailsService;
 
@@ -25,13 +39,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder encoder(){
         return new BCryptPasswordEncoder();
     }
-
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService)
-            .passwordEncoder(encoder());
+        auth.userDetailsService(userDetailsService).passwordEncoder(encoder());
     }
-
     /*
     @Override
     protected void configure(HttpSecurity http) throws Exception{
