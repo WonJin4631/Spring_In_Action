@@ -45,9 +45,9 @@ public class OrderApiController {
     return repo.save(order);
   }
 
+  // PATCH가 부분 변경의 의미를 내포하고 있더라도 실제로 변경을 수행하는 메서드 코드는 우리가 작성해야 된다.
   @PatchMapping(path="/{orderId}", consumes="application/json")
-  public Order patchOrder(@PathVariable("orderId") Long orderId,
-                          @RequestBody Order patch) {
+  public Order patchOrder(@PathVariable("orderId") Long orderId, @RequestBody Order patch) {
     
     Order order = repo.findById(orderId).get();
     if (patch.getDeliveryName() != null) {

@@ -26,19 +26,33 @@ public class RecentTacosController {
 
   @GetMapping(path="/tacos/recent", produces="application/hal+json")
   public ResponseEntity<Resources<TacoResource>> recentTacos() {
-    PageRequest page = PageRequest.of(
-                          0, 12, Sort.by("createdAt").descending());
+    PageRequest page = PageRequest.of(0, 12, Sort.by("createdAt").descending());
     List<Taco> tacos = tacoRepo.findAll(page).getContent();
 
-    List<TacoResource> tacoResources = 
-        new TacoResourceAssembler().toResources(tacos);
-    Resources<TacoResource> recentResources = 
-            new Resources<TacoResource>(tacoResources);
-    
+    List<TacoResource> tacoResources = new TacoResourceAssembler().toResources(tacos);
+    //ControllerLinkBuilder 사용 reecntTacos()
+//    Resources<Resource<Taco>> recentResources = Resources.wrap(tacos);
+//    recentResources.add(ControllerLinkBuilder.linkTo(DesginTacoController.class)
+//                        .slash("recent").withRel("recents"));
+    Resources<TacoResource> recentResources = new Resources<TacoResource>(tacoResources);
+    //linkTo() 방법
     recentResources.add(
         linkTo(methodOn(RecentTacosController.class).recentTacos())
             .withRel("recents"));
     return new ResponseEntity<>(recentResources, HttpStatus.OK);
   }
 
+  //TacoResourceAssembler 사용
+//  @GetMapping("/recent")
+//  public ResponseEntity<Resources<TacoResource>> recentTacos() {
+//    PageRequest page = PageRequest.of(0, 12, Sort.by("createdAt").descending());
+//    List<Taco> tacos = tacoRepo.findAll(page).getContent();
+//
+//    List<TacoResource> tacoResources = new TacoResourceAssembler().toResources(tacos);
+//    Resources<TacoResource> recentResources = new Resources<TacoResource>(tacoResources);
+//    recentResources.add(
+//            linkTo(methodOn(RecentTacosController.class).recentTacos())
+//                    .withRel("recents"));
+//    return new recentResources;
+//  }
 }

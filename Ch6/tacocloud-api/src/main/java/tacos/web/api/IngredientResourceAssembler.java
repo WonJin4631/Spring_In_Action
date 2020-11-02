@@ -17,8 +17,7 @@ class IngredientResourceAssembler extends
   }
   
   @Override
-  protected IngredientResource instantiateResource(
-                                            Ingredient ingredient) {
+  protected IngredientResource instantiateResource(Ingredient ingredient) {
     return new IngredientResource(ingredient);
   }
 
